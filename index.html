@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos de Programación Automotriz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for WhatsApp icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Fondo gris azulado claro */
+            color: #334155; /* Texto oscuro */
+            min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed; /* Posición fija */
+            z-index: 1000; /* Siempre en la parte superior */
+            left: 0;
+            top: 0;
+            width: 100%; /* Ancho completo */
+            height: 100%; /* Altura completa */
+            overflow: auto; /* Habilitar scroll si es necesario */
+            background-color: rgba(0,0,0,0.6); /* Fondo semi-transparente */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            max-height: 90vh; /* Altura máxima para scroll */
+            overflow-y: auto; /* Scroll vertical */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #4b5563;
+            text-decoration: none;
+        }
+        /* Ajustes responsivos para el modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+            .close-button {
+                font-size: 30px;
+                top: 10px;
+                right: 15px;
+            }
+        }
+        /* Barra de desplazamiento personalizada para el contenido del modal */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 10px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Estilo para mensajes de notificación */
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
+        .notification.error {
+            background-color: #f44336; /* Red */
+        }
+
+        /* Estilo para la barra de administración discreta */
+        .admin-trigger-bar {
+            width: 100%;
+            height: 15px; /* Altura de la barra */
+            background-color: #e2e8f0; /* Un color que se mezcle con el fondo o footer */
+            opacity: 0.1; /* Muy transparente para que casi no se vea */
+            cursor: pointer;
+            transition: opacity 0.2s ease-in-out;
+            margin-top: auto; /* Empuja la barra al final */
+        }
+        .admin-trigger-bar:hover {
+            opacity: 0.3; /* Ligeramente más visible al pasar el ratón */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl mb-12 flex justify-between items-center">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Cursos: Programación Automotriz</h1>
+                <p class="text-lg md:text-xl text-indigo-100 max-w-2xl">
+                    Capacitación de vanguardia para dominar la programación de llaves e inmovilizadores.
+                </p>
+            </div>
+            <!-- El botón de administración ha sido movido y transformado en una barra discreta al final de la página -->
+        </div>
+    </header>
+
+    <!-- Products Catalog Section -->
+    <section class="container mx-auto px-4 py-8 flex-grow"> <!-- flex-grow para que la sección ocupe el espacio restante -->
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">Nuestro Catálogo de Cursos Digitales</h2>
+
+        <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Las tarjetas de productos se cargarán aquí por JavaScript -->
+        </div>
+    </section>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div id="modal-content-area" class="flex flex-col md:flex-row gap-6">
+                <!-- Los detalles del producto se cargarán aquí por JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content max-w-md text-center">
+            <span class="close-button" onclick="closeAdminLoginModal()">&times;</span>
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Acceso de Administrador</h3>
+            <div class="mb-4">
+                <label for="admin-password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                <input type="password" id="admin-password" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button onclick="authenticateAdmin()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors duration-200">
+                Iniciar Sesión
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-panel-modal" class="modal">
+        <div class="modal-content max-w-4xl">
+            <span class="close-button" onclick="closeAdminPanelModal()">&times;</span>
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Panel de Administración de Cursos</h3>
+
+            <!-- Course Management Section (always visible in admin panel) -->
+            <div id="course-management-section" class="admin-section">
+                <button onclick="openAddEditForm()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200 mb-6">
+                    + Agregar Nuevo Curso
+                </button>
+
+                <!-- Add/Edit Course Form -->
+                <div id="add-edit-form" class="bg-gray-100 p-6 rounded-lg shadow-inner mb-8" style="display: none;">
+                    <h4 id="form-title" class="text-xl font-bold text-gray-800 mb-4">Agregar Curso</h4>
+                    <input type="hidden" id="course-id-field">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="course-name" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Curso:</label>
+                            <input type="text" id="course-name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="course-short-review" class="block text-gray-700 text-sm font-bold mb-2">Reseña Corta:</label>
+                            <input type="text" id="course-short-review" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="course-image" class="block text-gray-700 text-sm font-bold mb-2">URL de la Imagen:</label>
+                        <input type="text" id="course-image" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://placehold.co/400x300/...">
+                    </div>
+                    <div class="mb-4">
+                        <label for="course-full-description" class="block text-gray-700 text-sm font-bold mb-2">Descripción Completa:</label>
+                        <textarea id="course-full-description" rows="4" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="course-details" class="block text-gray-700 text-sm font-bold mb-2">Detalles (separar por coma):</label>
+                        <input type="text" id="course-details" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Módulos: 10, Horas: 20, Certificación: Sí">
+                    </div>
+                    <!-- New Fields for Pricing and Promotions -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="course-original-price" class="block text-gray-700 text-sm font-bold mb-2">Precio Original:</label>
+                            <input type="text" id="course-original-price" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="$500 USD">
+                        </div>
+                        <div>
+                            <label for="course-special-price" class="block text-gray-700 text-sm font-bold mb-2">Precio Especial:</label>
+                            <input type="text" id="course-special-price" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="$350 USD">
+                        </div>
+                        <div>
+                            <label for="course-discount-percentage" class="block text-gray-700 text-sm font-bold mb-2">Descuento (%):</label>
+                            <input type="text" id="course-discount-percentage" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="30% OFF">
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="course-promotion-text" class="block text-gray-700 text-sm font-bold mb-2">Texto de Promoción:</label>
+                        <input type="text" id="course-promotion-text" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="¡Últimos 3 cupos!">
+                    </div>
+                    <!-- End New Fields -->
+                    <div class="mb-6">
+                        <label for="course-whatsapp-message" class="block text-gray-700 text-sm font-bold mb-2">Mensaje WhatsApp predefinido:</label>
+                        <textarea id="course-whatsapp-message" rows="2" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Hola, me interesa el curso..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button onclick="saveCourse()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                            Guardar Curso
+                        </button>
+                        <button onclick="closeAddEditForm()" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- List of Courses for Admin -->
+                <div id="admin-course-list" class="grid grid-cols-1 gap-4">
+                    <!-- Courses will be listed here with edit/delete buttons -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Message -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Barra discreta para acceder al panel de administración -->
+    <div onclick="openAdminLoginModal()" class="admin-trigger-bar"></div>
+
+    <script>
+        // Contraseña para el panel de administración.
+        // NOTA IMPORTANTE: Para una aplicación real, esta contraseña NUNCA debe estar aquí.
+        // Se usaría un sistema de autenticación seguro con un backend.
+        // Aquí se simula una contraseña "encriptada" con una transformación simple (Base64)
+        // para cumplir con el requisito de "encriptada" sin usar una base de datos.
+        const ADMIN_PASSWORD_HASH = btoa('tuContraseñaSegura'); // "tuContraseñaSegura" codificada en Base64
+
+        // Datos de los cursos digitales. Se cargan desde localStorage o se usan los por defecto.
+        let products = [];
+
+        // Obtener elementos del DOM
+        const productListDiv = document.getElementById('product-list');
+        const productModal = document.getElementById('product-modal');
+        const modalContentArea = document.getElementById('modal-content-area');
+        const adminLoginModal = document.getElementById('admin-login-modal');
+        const adminPanelModal = document.getElementById('admin-panel-modal');
+        const adminPasswordInput = document.getElementById('admin-password');
+
+        // Course Management Elements
+        const courseManagementSection = document.getElementById('course-management-section');
+        const addEditForm = document.getElementById('add-edit-form');
+        const formTitle = document.getElementById('form-title');
+        const courseIdField = document.getElementById('course-id-field');
+        const courseNameInput = document.getElementById('course-name');
+        const courseShortReviewInput = document.getElementById('course-short-review');
+        const courseImageInput = document.getElementById('course-image');
+        const courseFullDescriptionInput = document.getElementById('course-full-description');
+        const courseDetailsInput = document.getElementById('course-details');
+        const courseOriginalPriceInput = document.getElementById('course-original-price'); // New
+        const courseSpecialPriceInput = document.getElementById('course-special-price');   // New
+        const courseDiscountPercentageInput = document.getElementById('course-discount-percentage'); // New
+        const coursePromotionTextInput = document.getElementById('course-promotion-text'); // New
+        const courseWhatsappMessageInput = document.getElementById('course-whatsapp-message');
+        const adminCourseListDiv = document.getElementById('admin-course-list');
+
+        const notificationDiv = document.getElementById('notification');
+
+        // Productos por defecto si no hay nada en localStorage
+        const defaultProducts = [
+            {
+                id: 'curso-llaves-transponders',
+                name: 'Curso Avanzado de Programación de Llaves y Transponders',
+                short_review: 'Domina la duplicación y programación de llaves automotrices.',
+                image: 'https://placehold.co/400x300/007bff/ffffff?text=Llaves+y+Transponders',
+                full_description: 'Este curso cubre desde los fundamentos de la criptografía en transponders hasta técnicas avanzadas de programación y clonación para una amplia gama de vehículos. Aprenderás a usar herramientas profesionales y a solucionar problemas comunes.',
+                details: [
+                    'Módulos: 12',
+                    'Horas de contenido: 30',
+                    'Certificación: Sí',
+                    'Acceso: Ilimitado',
+                    'Soporte: Foro exclusivo'
+                ],
+                original_price: '$500 USD',
+                special_price: '$350 USD',
+                discount_percentage: '30% OFF',
+                promotion_text: '¡Oferta especial: solo por este mes!',
+                whatsapp_message: 'Hola, me interesa el Curso Avanzado de Programación de Llaves y Transponders. ¿Podrías darme más información?'
+            },
+            {
+                id: 'curso-inmovilizadores',
+                name: 'Diagnóstico y Reparación de Sistemas Inmovilizadores',
+                short_review: 'Identifica y resuelve fallas en sistemas de seguridad automotriz.',
+                image: 'https://placehold.co/400x300/28a745/ffffff?text=Diagnostico+Inmovilizadores',
+                full_description: 'Aprende a diagnosticar, reparar y reprogramar módulos de inmovilizador. Este curso te dará las habilidades para entender los diagramas eléctricos, identificar componentes dañados y realizar las codificaciones necesarias para poner un vehículo en marcha.',
+                details: [
+                    'Módulos: 10',
+                    'Horas de contenido: 25',
+                    'Casos prácticos: Incluidos',
+                    'Herramientas: Recomendaciones de equipo',
+                    'Actualizaciones: Periódicas'
+                ],
+                original_price: '$450 USD',
+                special_price: '$380 USD',
+                discount_percentage: '15% OFF',
+                promotion_text: '¡Últimos 5 cupos disponibles!',
+                whatsapp_message: 'Hola, me interesa el Curso de Diagnóstico y Reparación de Sistemas Inmovilizadores. ¿Podrías darme más información?'
+            },
+            {
+                id: 'curso-programacion-ecus',
+                name: 'Programación de ECUs: Casos Prácticos y Soluciones',
+                short_review: 'Domina la reprogramación y virginización de unidades de control de motor.',
+                image: 'https://placehold.co/400x300/ffc107/333333?text=Programacion+ECUs',
+                full_description: 'Este curso te sumerge en el complejo mundo de la programación de ECUs. Desde la lectura de la flash y eeprom hasta la virginización y adaptación de unidades de segunda mano. Incluye ejemplos con diferentes tipos de vehículos y herramientas.',
+                details: [
+                    'Módulos: 8',
+                    'Horas de contenido: 20',
+                    'Enfoque: Práctico',
+                    'Software: Guías de uso',
+                    'Soporte: Directo del instructor'
+                ],
+                original_price: '$600 USD',
+                special_price: '', // No special price for this one by default
+                discount_percentage: '',
+                promotion_text: '¡NUEVO! Conviértete en un experto.',
+                whatsapp_message: 'Hola, me interesa el Curso de Programación de ECUs. ¿Podrías darme más información?'
+            },
+            {
+                id: 'curso-llaves-inteligentes',
+                name: 'Curso Especializado en Programación de Llaves Inteligentes (Smart Key)',
+                short_review: 'Accede a la tecnología de última generación en llaves remotas y de proximidad.',
+                image: 'https://placehold.co/400x300/dc3545/ffffff?text=Smart+Key+Programacion',
+                full_description: 'Las llaves inteligentes requieren un conocimiento específico. Este curso aborda los protocolos de comunicación, los sistemas de antena, y los procedimientos de programación para las llaves más modernas. Ideal para talleres que quieren estar a la vanguardia.',
+                details: [
+                    'Módulos: 7',
+                    'Horas de contenido: 18',
+                    'Tecnología: BLE, RFID',
+                    'Casos de estudio: Vehículos premium',
+                    'Nivel: Intermedio-Avanzado'
+                ],
+                original_price: '$550 USD',
+                special_price: '',
+                discount_percentage: '',
+                promotion_text: '¡Capacítate en la tecnología del futuro!',
+                whatsapp_message: 'Hola, me interesa el Curso de Programación de Llaves Inteligentes. ¿Podrías darme más información?'
+            },
+            {
+                id: 'manejo-equipos-programacion',
+                name: 'Manejo de Equipos de Programación: Teoría y Práctica',
+                short_review: 'Aprende a usar los programadores y herramientas clave del sector.',
+                image: 'https://placehold.co/400x300/6f42c1/ffffff?text=Manejo+Equipos',
+                full_description: 'Un curso enfocado en el uso correcto y eficiente de los principales equipos de programación (ej. XPROG, VVDI, Autel IM, etc.). Conocerás sus funciones, limitaciones y las mejores prácticas para evitar daños y errores.',
+                details: [
+                    'Módulos: 6',
+                    'Horas de contenido: 15',
+                    'Equipos: Varias marcas',
+                    'Simulaciones: Interactivas',
+                    'Guías: Descargables'
+                ],
+                original_price: '$400 USD',
+                special_price: '$300 USD',
+                discount_percentage: '25% OFF',
+                promotion_text: '¡Aprovecha, precio de lanzamiento!',
+                whatsapp_message: 'Hola, me interesa el Curso de Manejo de Equipos de Programación. ¿Podrías darme más información?'
+            },
+            {
+                id: 'diagnostico-can-bus',
+                name: 'Curso: Diagnóstico Avanzado de Sistemas Can-Bus',
+                short_review: 'Comprende y diagnostica redes de comunicación automotriz.',
+                image: 'https://placehold.co/400x300/fd7e14/ffffff?text=CAN+Bus+Diagnostico',
+                full_description: 'El sistema CAN-Bus es crucial en vehículos modernos. Este curso te enseña a interpretar flujos de datos, identificar fallas de comunicación y solucionar problemas en la red, fundamental para cualquier programación de módulos.',
+                details: [
+                    'Módulos: 5',
+                    'Horas de contenido: 12',
+                    'Herramientas: Multímetro, Osciloscopio',
+                    'Protocolos: CAN, LIN, K-Line',
+                    'Ejercicios: Resolución de problemas'
+                ],
+                original_price: '$380 USD',
+                special_price: '',
+                discount_percentage: '',
+                promotion_text: '¡Mejora tus habilidades ahora!',
+                whatsapp_message: 'Hola, me interesa el Curso de Diagnóstico Avanzado de Sistemas Can-Bus. ¿Podrías darme más información?'
+            },
+            {
+                id: 'sincronizacion-ecu-immo',
+                name: 'Módulo Especializado: Sincronización ECU-IMMO',
+                short_review: 'Aprende a sincronizar unidades de motor e inmovilizador.',
+                image: 'https://placehold.co/400x300/17a2b8/ffffff?text=Sincronizacion+ECU-IMMO',
+                full_description: 'La sincronización entre la ECU y el inmovilizador es clave en muchos trabajos de reemplazo o reparación. Este módulo profundiza en los métodos y desafíos de este proceso crítico.',
+                details: [
+                    'Módulos: 4',
+                    'Horas de contenido: 10',
+                    'Enfoque: Monográfico',
+                    'Casos reales: Ilustrados',
+                    'Nivel: Avanzado'
+                ],
+                original_price: '$300 USD',
+                special_price: '$250 USD',
+                discount_percentage: '17% OFF',
+                promotion_text: '¡Cupos limitados!',
+                whatsapp_message: 'Hola, me interesa el Módulo Especializado: Sincronización ECU-IMMO. ¿Podrías darme más información?'
+            },
+            {
+                id: 'reparacion-modulos-inmovilizadores',
+                name: 'Guía Práctica: Reparación de Módulos Inmovilizadores',
+                short_review: 'Técnicas de reparación a nivel componente para inmovilizadores.',
+                image: 'https://placehold.co/400x300/e83e8c/ffffff?text=Reparacion+Inmovilizadores',
+                full_description: 'Más allá de la programación, a veces la reparación de un módulo es necesaria. Esta guía ofrece un enfoque práctico para identificar componentes dañados y técnicas de microsoldadura y reemplazo.',
+                details: [
+                    'Formato: Guía digital interactiva',
+                    'Secciones: 8',
+                    'Herramientas: Microscopio, cautín',
+                    'Componentes: Identificación y reemplazo',
+                    'Habilidades: Microsoldadura'
+                ],
+                original_price: '$280 USD',
+                special_price: '',
+                discount_percentage: '',
+                promotion_text: 'Guía completa para tu taller.',
+                whatsapp_message: 'Hola, me interesa la Guía Práctica: Reparación de Módulos Inmovilizadores. ¿Podrías darme más información?'
+            },
+            {
+                id: 'software-hardware-programacion',
+                name: 'Curso Online: Software y Hardware para Programación Automotriz',
+                short_review: 'Conoce y configura las herramientas esenciales para tu taller.',
+                image: 'https://placehold.co/400x300/6610f2/ffffff?text=Software+Hardware',
+                full_description: 'Este curso es una introducción completa al ecosistema de software y hardware que todo programador automotriz debe conocer. Desde la instalación de drivers hasta la configuración de interfaces de diagnóstico.',
+                details: [
+                    'Módulos: 7',
+                    'Horas de contenido: 16',
+                    'Instalación: Paso a paso',
+                    'Configuración: Optimizada',
+                    'Compatibilidad: Sistemas operativos'
+                ],
+                original_price: '$420 USD',
+                special_price: '$340 USD',
+                discount_percentage: '19% OFF',
+                promotion_text: '¡Inicia tu camino profesional!',
+                whatsapp_message: 'Hola, me interesa el Curso de Software y Hardware para Programación Automotriz. ¿Podrías darme más información?'
+            },
+            {
+                id: 'clonacion-ecu-bcm',
+                name: 'Taller Virtual: Clonación de ECU y BCM',
+                short_review: 'Clona y adapta unidades de control de motor y carrocería.',
+                image: 'https://placehold.co/400x300/20c997/ffffff?text=Clonacion+ECU+BCM',
+                full_description: 'Un taller intensivo donde aprenderás las técnicas y precauciones para clonar ECUs y BCMs (Módulos de Control de Carrocería). Imprescindible para el reemplazo y reparación de estos componentes.',
+                details: [
+                    'Formato: Video-taller',
+                    'Casos reales: Abundantes',
+                    'Precauciones: Seguridad',
+                    'Herramientas: Específicas',
+                    'Ejercicios: Guiados'
+                ],
+                original_price: '$350 USD',
+                special_price: '',
+                discount_percentage: '',
+                promotion_text: 'Conviértete en un maestro de la clonación.',
+                whatsapp_message: 'Hola, me interesa el Taller Virtual: Clonación de ECU y BCM. ¿Podrías darme más información?'
+            },
+            {
+                id: 'solucion-problemas-arranque',
+                name: 'Curso Rápido: Solución de Problemas de Arranque por Inmovilizador',
+                short_review: 'Diagnostica y soluciona rápidamente vehículos que no arrancan por inmovilizador.',
+                image: 'https://placehold.co/400x300/ff8f00/ffffff?text=Problemas+Arranque',
+                full_description: 'Un curso conciso pero efectivo para identificar si un problema de no arranque está relacionado con el sistema de inmovilizador y cómo aplicar soluciones eficientes en el taller.',
+                details: [
+                    'Módulos: 3',
+                    'Horas de contenido: 8',
+                    'Enfoque: Rápido y práctico',
+                    'Diagnóstico: Pasos clave',
+                    'Soluciones: Comunes'
+                ],
+                original_price: '$200 USD',
+                special_price: '$150 USD',
+                discount_percentage: '25% OFF',
+                promotion_text: '¡Resuelve problemas al instante!',
+                whatsapp_message: 'Hola, me interesa el Curso Rápido: Solución de Problemas de Arranque por Inmovilizador. ¿Podrías darme más información?'
+            },
+            {
+                id: 'tendencias-seguridad-automotriz',
+                name: 'Seminario Web: Últimas Tendencias en Seguridad Automotriz',
+                short_review: 'Mantente al día con los avances y retos en la seguridad electrónica del auto.',
+                image: 'https://placehold.co/400x300/a7c5eb/333333?text=Tendencias+Seguridad',
+                full_description: 'Un seminario que explora las nuevas tecnologías de seguridad vehicular, los desafíos para los talleres y las oportunidades de negocio emergentes en el campo de la electrónica automotriz y la ciberseguridad.',
+                details: [
+                    'Módulos: 1 (seminario)',
+                    'Horas de contenido: 3',
+                    'Formato: Grabación y PDF',
+                    'Temas: Hacking automotriz, ADAS',
+                    'Perspectivas: Futuro del sector'
+                ],
+                original_price: '$120 USD',
+                special_price: '',
+                discount_percentage: '',
+                promotion_text: '¡Mantente a la vanguardia!',
+                whatsapp_message: 'Hola, me interesa el Seminario Web: Últimas Tendencias en Seguridad Automotriz. ¿Podrías darme más información?'
+            }
+        ];
+
+        // --- Funciones de Utilidad para localStorage y Notificaciones ---
+
+        /**
+         * Guarda el array de productos en el localStorage del navegador.
+         */
+        function saveProductsToLocalStorage() {
+            localStorage.setItem('automotiveCourses', JSON.stringify(products));
+            showNotification('Cambios guardados con éxito.', false);
+        }
+
+        /**
+         * Carga el array de productos desde el localStorage. Si no hay datos, usa los por defecto.
+         */
+        function loadProductsFromLocalStorage() {
+            const storedProducts = localStorage.getItem('automotiveCourses');
+            if (storedProducts) {
+                try {
+                    products = JSON.parse(storedProducts);
+                } catch (e) {
+                    console.error("Error al parsear productos desde localStorage, usando por defecto:", e);
+                    products = defaultProducts;
+                }
+            } else {
+                products = defaultProducts;
+            }
+        }
+
+        /**
+         * Muestra una notificación temporal al usuario.
+         * @param {string} message - El mensaje a mostrar.
+         * @param {boolean} isError - True si es un mensaje de error, false para éxito.
+         */
+        function showNotification(message, isError) {
+            notificationDiv.textContent = message;
+            notificationDiv.classList.remove('success', 'error');
+            if (isError) {
+                notificationDiv.classList.add('error');
+            } else {
+                notificationDiv.classList.add('success');
+            }
+            notificationDiv.style.display = 'block';
+            setTimeout(() => {
+                notificationDiv.style.display = 'none';
+            }, 3000); // Ocultar después de 3 segundos
+        }
+
+        // --- Funciones para la UI del Catálogo ---
+
+        /**
+         * Renderiza las tarjetas de los cursos en la sección principal.
+         */
+        function renderProductCards() {
+            productListDiv.innerHTML = ''; // Limpiar lista existente
+            if (products.length === 0) {
+                productListDiv.innerHTML = '<p class="text-center text-gray-600 col-span-full">No hay cursos disponibles en este momento.</p>';
+                return;
+            }
+            products.forEach(product => {
+                let priceHtml = '';
+                if (product.special_price) {
+                    priceHtml = `
+                        <p class="text-gray-500 line-through text-sm">${product.original_price || ''}</p>
+                        <p class="text-green-600 font-bold text-xl">${product.special_price}</p>
+                    `;
+                } else if (product.original_price) {
+                    priceHtml = `<p class="text-gray-900 font-bold text-xl">${product.original_price}</p>`;
+                } else {
+                    priceHtml = `<p class="text-gray-500 text-sm">Precio no disponible</p>`;
+                }
+
+                let promotionTextHtml = product.promotion_text ?
+                    `<p class="text-blue-600 text-xs font-semibold mt-1">${product.promotion_text}</p>` : '';
+                let discountBadgeHtml = product.discount_percentage ?
+                    `<span class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">${product.discount_percentage}</span>` : '';
+
+
+                const cardHtml = `
+                    <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col cursor-pointer relative" onclick="openModal('${product.id}')">
+                        ${discountBadgeHtml}
+                        <img src="${product.image}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/333333?text=Imagen+no+disponible';" alt="${product.name}" class="w-full h-48 object-cover">
+                        <div class="p-6 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">${product.name}</h3>
+                                <p class="text-gray-600 text-sm mb-4">${product.short_review}</p>
+                                <div class="flex flex-col items-start mb-4">
+                                    ${priceHtml}
+                                    ${promotionTextHtml}
+                                </div>
+                            </div>
+                            <button class="mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                                Ver Temario Completo
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productListDiv.innerHTML += cardHtml;
+            });
+        }
+
+        /**
+         * Abre el modal de detalles del curso.
+         * @param {string} productId - ID del curso a mostrar.
+         */
+        function openModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                let detailsHtml = '';
+                // Asegurarse de que 'details' sea un array antes de iterar
+                if (Array.isArray(product.details)) {
+                    product.details.forEach(detail => {
+                        detailsHtml += `<li class="text-gray-700 mb-1">${detail}</li>`;
+                    });
+                } else if (typeof product.details === 'string' && product.details.trim() !== '') {
+                    // Si los detalles vienen como string separado por comas
+                    product.details.split(',').forEach(detail => {
+                        detailsHtml += `<li class="text-gray-700 mb-1">${detail.trim()}</li>`;
+                    });
+                }
+
+                let modalPriceHtml = '';
+                if (product.special_price) {
+                    modalPriceHtml = `
+                        <p class="text-gray-500 line-through text-lg mt-2">${product.original_price || ''}</p>
+                        <p class="text-green-600 font-bold text-3xl">${product.special_price}</p>
+                    `;
+                } else if (product.original_price) {
+                    modalPriceHtml = `<p class="text-gray-900 font-bold text-3xl mt-2">${product.original_price}</p>`;
+                } else {
+                    modalPriceHtml = `<p class="text-gray-500 text-md mt-2">Precio no disponible</p>`;
+                }
+
+                let modalPromotionTextHtml = product.promotion_text ?
+                    `<p class="text-blue-600 text-sm font-semibold mt-2">${product.promotion_text}</p>` : '';
+                let modalDiscountBadgeHtml = product.discount_percentage ?
+                    `<span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-md ml-3">${product.discount_percentage}</span>` : '';
+
+
+                modalContentArea.innerHTML = `
+                    <div class="md:w-1/2 flex-shrink-0">
+                        <img src="${product.image}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Imagen+no+disponible';" alt="${product.name}" class="w-full h-auto rounded-lg shadow-md mb-6 md:mb-0">
+                    </div>
+                    <div class="md:w-1/2 flex flex-col justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900 mb-2">${product.name}</h2>
+                            <div class="flex items-baseline mb-4">
+                                ${modalPriceHtml}
+                                ${modalDiscountBadgeHtml}
+                            </div>
+                            ${modalPromotionTextHtml}
+                            <p class="text-gray-800 leading-relaxed mb-6 mt-4">${product.full_description}</p>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Detalles del Curso:</h3>
+                            <ul class="list-disc pl-5 mb-8">
+                                ${detailsHtml}
+                            </ul>
+                        </div>
+                        <a href="https://wa.me/?text=${encodeURIComponent(product.whatsapp_message)}" target="_blank" class="mt-auto inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg">
+                            <i class="fab fa-whatsapp mr-3 text-2xl"></i> ¡Quiero Convertirme en un Experto! Inscribirme Ahora
+                        </a>
+                    </div>
+                `;
+                productModal.style.display = 'flex'; // Mostrar modal
+            }
+        }
+
+        /**
+         * Cierra el modal de detalles del curso.
+         */
+        function closeModal() {
+            productModal.style.display = 'none';
+            modalContentArea.innerHTML = ''; // Limpiar contenido al cerrar
+        }
+
+        // --- Funciones para el Panel de Administración ---
+
+        /**
+         * Abre el modal de inicio de sesión del administrador.
+         */
+        function openAdminLoginModal() {
+            adminPasswordInput.value = ''; // Limpiar campo de contraseña
+            adminLoginModal.style.display = 'flex';
+        }
+
+        /**
+         * Cierra el modal de inicio de sesión del administrador.
+         */
+        function closeAdminLoginModal() {
+            adminLoginModal.style.display = 'none';
+        }
+
+        /**
+         * Autentica al administrador con la contraseña.
+         */
+        function authenticateAdmin() {
+            const enteredPassword = adminPasswordInput.value;
+            // Descodifica la contraseña 'encriptada' (Base64) para la comparación
+            if (btoa(enteredPassword) === ADMIN_PASSWORD_HASH) {
+                closeAdminLoginModal();
+                openAdminPanelModal();
+                renderAdminCourseList(); // Asegurarse de que la lista de cursos esté actualizada
+                showNotification('Acceso de administrador concedido.', false);
+            } else {
+                showNotification('Contraseña incorrecta. Intenta de nuevo.', true);
+            }
+        }
+
+        /**
+         * Abre el modal del panel de administración.
+         */
+        function openAdminPanelModal() {
+            adminPanelModal.style.display = 'flex';
+        }
+
+        /**
+         * Cierra el modal del panel de administración.
+         */
+        function closeAdminPanelModal() {
+            adminPanelModal.style.display = 'none';
+            closeAddEditForm(); // Asegurarse de que el formulario de añadir/editar esté oculto
+        }
+        
+        /**
+         * Renderiza la lista de cursos en el panel de administración.
+         */
+        function renderAdminCourseList() {
+            adminCourseListDiv.innerHTML = ''; // Limpiar lista existente
+            if (products.length === 0) {
+                adminCourseListDiv.innerHTML = '<p class="text-center text-gray-600 col-span-full">No hay cursos para administrar. ¡Agrega uno!</p>';
+                return;
+            }
+            products.forEach(product => {
+                const courseItemHtml = `
+                    <div class="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row items-center justify-between gap-4">
+                        <span class="font-semibold text-gray-900 flex-grow text-center md:text-left">${product.name}</span>
+                        <div class="flex gap-2 mt-2 md:mt-0">
+                            <button onclick="editCourse('${product.id}')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-sm transition-colors duration-200">
+                                Editar
+                            </button>
+                            <button onclick="deleteCourse('${product.id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-sm transition-colors duration-200">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                adminCourseListDiv.innerHTML += courseItemHtml;
+            });
+        }
+
+        /**
+         * Abre el formulario para añadir o editar un curso.
+         * @param {string|null} productId - ID del curso a editar, o null para añadir uno nuevo.
+         */
+        function openAddEditForm(productId = null) {
+            addEditForm.style.display = 'block';
+            if (productId) {
+                formTitle.textContent = 'Editar Curso';
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    courseIdField.value = product.id;
+                    courseNameInput.value = product.name;
+                    courseShortReviewInput.value = product.short_review;
+                    courseImageInput.value = product.image;
+                    courseFullDescriptionInput.value = product.full_description;
+                    courseDetailsInput.value = Array.isArray(product.details) ? product.details.join(', ') : product.details || '';
+                    courseOriginalPriceInput.value = product.original_price || ''; // Populate new fields
+                    courseSpecialPriceInput.value = product.special_price || '';
+                    courseDiscountPercentageInput.value = product.discount_percentage || '';
+                    coursePromotionTextInput.value = product.promotion_text || '';
+                    courseWhatsappMessageInput.value = product.whatsapp_message;
+                }
+            } else {
+                formTitle.textContent = 'Agregar Nuevo Curso';
+                courseIdField.value = '';
+                courseNameInput.value = '';
+                courseShortReviewInput.value = '';
+                courseImageInput.value = '';
+                courseFullDescriptionInput.value = '';
+                courseDetailsInput.value = '';
+                courseOriginalPriceInput.value = ''; // Clear new fields
+                courseSpecialPriceInput.value = '';
+                courseDiscountPercentageInput.value = '';
+                coursePromotionTextInput.value = '';
+                courseWhatsappMessageInput.value = '';
+            }
+        }
+
+        /**
+         * Cierra el formulario de añadir/editar curso.
+         */
+        function closeAddEditForm() {
+            addEditForm.style.display = 'none';
+        }
+
+        /**
+         * Guarda un curso (añade uno nuevo o modifica uno existente).
+         */
+        function saveCourse() {
+            const id = courseIdField.value || Date.now().toString(); // Generar ID si es nuevo
+            const name = courseNameInput.value.trim();
+            const short_review = courseShortReviewInput.value.trim();
+            const image = courseImageInput.value.trim();
+            const full_description = courseFullDescriptionInput.value.trim();
+            const details = courseDetailsInput.value.split(',').map(d => d.trim()).filter(d => d); // Convertir string a array
+            const original_price = courseOriginalPriceInput.value.trim(); // New
+            const special_price = courseSpecialPriceInput.value.trim();   // New
+            const discount_percentage = courseDiscountPercentageInput.value.trim(); // New
+            const promotion_text = coursePromotionTextInput.value.trim(); // New
+            const whatsapp_message = courseWhatsappMessageInput.value.trim();
+
+            if (!name || !short_review || !full_description || details.length === 0 || !whatsapp_message) {
+                showNotification('Por favor, completa los campos obligatorios del curso.', true);
+                return;
+            }
+
+            const newCourse = {
+                id,
+                name,
+                short_review,
+                image: image || 'https://placehold.co/400x300/cccccc/333333?text=Imagen+por+defecto', // Imagen por defecto si no se proporciona
+                full_description,
+                details,
+                original_price, // Save new fields
+                special_price,
+                discount_percentage,
+                promotion_text,
+                whatsapp_message
+            };
+
+            const existingIndex = products.findIndex(p => p.id === id);
+            if (existingIndex > -1) {
+                // Modificar curso existente
+                products[existingIndex] = newCourse;
+                showNotification('Curso modificado con éxito.', false);
+            } else {
+                // Añadir nuevo curso
+                products.push(newCourse);
+                showNotification('Curso añadido con éxito.', false);
+            }
+
+            saveProductsToLocalStorage();
+            renderProductCards(); // Actualizar la vista del catálogo
+            renderAdminCourseList(); // Actualizar la lista en el panel de administración
+            closeAddEditForm(); // Cerrar el formulario
+        }
+
+        /**
+         * Edita un curso existente.
+         * @param {string} productId - ID del curso a editar.
+         */
+        function editCourse(productId) {
+            openAddEditForm(productId);
+        }
+
+        /**
+         * Elimina un curso.
+         * @param {string} productId - ID del curso a eliminar.
+         */
+        function deleteCourse(productId) {
+            // Confirmación simple para eliminar
+            if (confirm('¿Estás seguro de que quieres eliminar este curso? Esta acción no se puede deshacer.')) {
+                products = products.filter(p => p.id !== productId);
+                saveProductsToLocalStorage();
+                renderProductCards(); // Actualizar la vista del catálogo
+                renderAdminCourseList(); // Actualizar la lista en el panel de administración
+                showNotification('Curso eliminado con éxito.', false);
+            }
+        }
+
+        // --- Inicialización ---
+
+        // Cierra el modal si se hace clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target == productModal) {
+                closeModal();
+            } else if (event.target == adminLoginModal) {
+                closeAdminLoginModal();
+            } else if (event.target == adminPanelModal) {
+                // No cerrar el panel admin si se hace click fuera, para evitar perder el estado del formulario
+                // Se cierra con el botón X o al recargar la página.
+            }
+        };
+
+        // Carga los productos y renderiza el catálogo cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductsFromLocalStorage();
+            renderProductCards();
+        });
+    </script>
+</body>
+</html>
