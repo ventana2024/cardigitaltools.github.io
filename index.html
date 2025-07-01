@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -139,9 +139,11 @@
     <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl mb-12 flex justify-between items-center">
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
             <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Cursos: Programación Automotriz</h1>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">
+                    ¡50% de Descuento en Cursos de Programación Automotriz!
+                </h1>
                 <p class="text-lg md:text-xl text-indigo-100 max-w-2xl">
-                    Capacitación de vanguardia para dominar la programación de llaves e inmovilizadores.
+                    Descubre ofertas exclusivas del 1 al 20 de Julio. ¡Nuevas oportunidades se revelarán cada día!
                 </p>
             </div>
             <!-- El botón de administración ha sido movido y transformado en una barra discreta al final de la página -->
@@ -150,10 +152,26 @@
 
     <!-- Products Catalog Section -->
     <section class="container mx-auto px-4 py-8 flex-grow"> <!-- flex-grow para que la sección ocupe el espacio restante -->
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">Nuestro Catálogo de Cursos Digitales</h2>
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-800">
+            ¡Ofertas Irresistibles que No Puedes Perderte!
+        </h2>
+        <p class="text-lg text-center text-gray-600 mb-10 max-w-3xl mx-auto">
+            Aprovecha el 50% de descuento en nuestros cursos, disponibles solo por 3 días una vez que aparecen en esta página. ¡Después de este tiempo, el descuento irá bajando!
+        </p>
 
         <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Las tarjetas de productos se cargarán aquí por JavaScript -->
+        </div>
+
+        <!-- WhatsApp Contact Section - Moved to the end of products -->
+        <div class="text-center mt-12">
+            <p class="text-xl text-gray-700 font-semibold mb-6 max-w-2xl mx-auto">
+                ¿Tienes preguntas, comentarios, o buscas un curso en particular?
+                ¡Contáctanos por WhatsApp! Estamos aquí para ayudarte a armar el paquete de cursos perfecto para tus necesidades.
+            </p>
+            <a id="catalog-whatsapp-button" href="#" target="_blank" class="inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-200 text-lg">
+                <i class="fab fa-whatsapp mr-3 text-2xl"></i> Contactar por WhatsApp
+            </a>
         </div>
     </section>
 
@@ -187,6 +205,21 @@
         <div class="modal-content max-w-4xl">
             <span class="close-button" onclick="closeAdminPanelModal()">&times;</span>
             <h3 class="text-2xl font-bold text-gray-900 mb-6">Panel de Administración de Cursos</h3>
+
+            <!-- Global Settings Section -->
+            <div class="bg-gray-100 p-6 rounded-lg shadow-inner mb-8">
+                <h4 class="text-xl font-bold text-gray-800 mb-4">Configuración Global</h4>
+                <div class="mb-4">
+                    <label for="whatsapp-group-link" class="block text-gray-700 text-sm font-bold mb-2">Enlace de Grupo de WhatsApp Global:</label>
+                    <input type="url" id="whatsapp-group-link" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: https://chat.whatsapp.com/ABCD123EFGH">
+                    <p class="text-xs text-gray-500 mt-1">Este enlace se usará por defecto para todos los cursos, a menos que se especifique uno individual. También es el enlace del botón de WhatsApp general.</p>
+                </div>
+                <div class="flex justify-end">
+                    <button onclick="saveGlobalSettings()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                        Guardar Configuración Global
+                    </button>
+                </div>
+            </div>
 
             <!-- Course Management Section (always visible in admin panel) -->
             <div id="course-management-section" class="admin-section">
@@ -239,11 +272,28 @@
                         <label for="course-promotion-text" class="block text-gray-700 text-sm font-bold mb-2">Texto de Promoción:</label>
                         <input type="text" id="course-promotion-text" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="¡Últimos 3 cupos!">
                     </div>
-                    <!-- End New Fields -->
-                    <div class="mb-6">
-                        <label for="course-whatsapp-message" class="block text-gray-700 text-sm font-bold mb-2">Mensaje WhatsApp predefinido:</label>
-                        <textarea id="course-whatsapp-message" rows="2" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Hola, me interesa el curso..."></textarea>
+
+                    <!-- WhatsApp Link Option - New Section -->
+                    <div class="mb-6 bg-blue-50 p-4 rounded-lg">
+                        <label class="block text-gray-700 text-sm font-bold mb-3">Enlace de WhatsApp para este Curso:</label>
+                        <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="whatsapp_link_type" value="global" checked class="form-radio text-blue-600" onchange="toggleIndividualWhatsappLink()">
+                                <span class="ml-2 text-gray-700">Usar Enlace Global</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="whatsapp_link_type" value="individual" class="form-radio text-blue-600" onchange="toggleIndividualWhatsappLink()">
+                                <span class="ml-2 text-gray-700">Usar Enlace Individual</span>
+                            </label>
+                        </div>
+                        <div id="individual-whatsapp-link-field" class="hidden">
+                            <label for="course-individual-whatsapp-link" class="block text-gray-700 text-sm font-bold mb-2">Enlace Individual de WhatsApp:</label>
+                            <input type="url" id="course-individual-whatsapp-link" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: https://wa.me/1234567890?text=Hola%20me%20interesa%20el%20curso...">
+                            <p class="text-xs text-gray-500 mt-1">Este enlace solo aplicará para este curso.</p>
+                        </div>
                     </div>
+                    <!-- End WhatsApp Link Option -->
+
                     <div class="flex justify-end gap-3">
                         <button onclick="saveCourse()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
                             Guardar Curso
@@ -278,6 +328,9 @@
 
         // Datos de los cursos digitales. Se cargan desde localStorage o se usan los por defecto.
         let products = [];
+        let globalSettings = {
+            whatsappGroupLink: 'https://chat.whatsapp.com/TuEnlaceDeGrupoPorDefecto' // Default WhatsApp group link
+        };
 
         // Obtener elementos del DOM
         const productListDiv = document.getElementById('product-list');
@@ -286,6 +339,10 @@
         const adminLoginModal = document.getElementById('admin-login-modal');
         const adminPanelModal = document.getElementById('admin-panel-modal');
         const adminPasswordInput = document.getElementById('admin-password');
+
+        // Global Settings Elements
+        const whatsappGroupLinkInput = document.getElementById('whatsapp-group-link');
+        const catalogWhatsappButton = document.getElementById('catalog-whatsapp-button'); // New: Catalog WhatsApp button
 
         // Course Management Elements
         const courseManagementSection = document.getElementById('course-management-section');
@@ -297,11 +354,16 @@
         const courseImageInput = document.getElementById('course-image');
         const courseFullDescriptionInput = document.getElementById('course-full-description');
         const courseDetailsInput = document.getElementById('course-details');
-        const courseOriginalPriceInput = document.getElementById('course-original-price'); // New
-        const courseSpecialPriceInput = document.getElementById('course-special-price');   // New
-        const courseDiscountPercentageInput = document.getElementById('course-discount-percentage'); // New
-        const coursePromotionTextInput = document.getElementById('course-promotion-text'); // New
-        const courseWhatsappMessageInput = document.getElementById('course-whatsapp-message');
+        const courseOriginalPriceInput = document.getElementById('course-original-price');
+        const courseSpecialPriceInput = document.getElementById('course-special-price');
+        const courseDiscountPercentageInput = document.getElementById('course-discount-percentage');
+        const coursePromotionTextInput = document.getElementById('course-promotion-text');
+        
+        // New WhatsApp Link elements
+        const whatsappLinkTypeRadios = document.querySelectorAll('input[name="whatsapp_link_type"]');
+        const individualWhatsappLinkField = document.getElementById('individual-whatsapp-link-field');
+        const courseIndividualWhatsappLinkInput = document.getElementById('course-individual-whatsapp-link');
+
         const adminCourseListDiv = document.getElementById('admin-course-list');
 
         const notificationDiv = document.getElementById('notification');
@@ -325,7 +387,8 @@
                 special_price: '$350 USD',
                 discount_percentage: '30% OFF',
                 promotion_text: '¡Oferta especial: solo por este mes!',
-                whatsapp_message: 'Hola, me interesa el Curso Avanzado de Programación de Llaves y Transponders. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'curso-inmovilizadores',
@@ -344,7 +407,8 @@
                 special_price: '$380 USD',
                 discount_percentage: '15% OFF',
                 promotion_text: '¡Últimos 5 cupos disponibles!',
-                whatsapp_message: 'Hola, me interesa el Curso de Diagnóstico y Reparación de Sistemas Inmovilizadores. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'curso-programacion-ecus',
@@ -363,7 +427,8 @@
                 special_price: '', // No special price for this one by default
                 discount_percentage: '',
                 promotion_text: '¡NUEVO! Conviértete en un experto.',
-                whatsapp_message: 'Hola, me interesa el Curso de Programación de ECUs. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'curso-llaves-inteligentes',
@@ -382,7 +447,8 @@
                 special_price: '',
                 discount_percentage: '',
                 promotion_text: '¡Capacítate en la tecnología del futuro!',
-                whatsapp_message: 'Hola, me interesa el Curso de Programación de Llaves Inteligentes. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'manejo-equipos-programacion',
@@ -401,7 +467,8 @@
                 special_price: '$300 USD',
                 discount_percentage: '25% OFF',
                 promotion_text: '¡Aprovecha, precio de lanzamiento!',
-                whatsapp_message: 'Hola, me interesa el Curso de Manejo de Equipos de Programación. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'diagnostico-can-bus',
@@ -420,7 +487,8 @@
                 special_price: '',
                 discount_percentage: '',
                 promotion_text: '¡Mejora tus habilidades ahora!',
-                whatsapp_message: 'Hola, me interesa el Curso de Diagnóstico Avanzado de Sistemas Can-Bus. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'sincronizacion-ecu-immo',
@@ -439,7 +507,8 @@
                 special_price: '$250 USD',
                 discount_percentage: '17% OFF',
                 promotion_text: '¡Cupos limitados!',
-                whatsapp_message: 'Hola, me interesa el Módulo Especializado: Sincronización ECU-IMMO. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'reparacion-modulos-inmovilizadores',
@@ -458,7 +527,8 @@
                 special_price: '',
                 discount_percentage: '',
                 promotion_text: 'Guía completa para tu taller.',
-                whatsapp_message: 'Hola, me interesa la Guía Práctica: Reparación de Módulos Inmovilizadores. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'software-hardware-programacion',
@@ -477,7 +547,8 @@
                 special_price: '$340 USD',
                 discount_percentage: '19% OFF',
                 promotion_text: '¡Inicia tu camino profesional!',
-                whatsapp_message: 'Hola, me interesa el Curso de Software y Hardware para Programación Automotriz. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'clonacion-ecu-bcm',
@@ -496,7 +567,8 @@
                 special_price: '',
                 discount_percentage: '',
                 promotion_text: 'Conviértete en un maestro de la clonación.',
-                whatsapp_message: 'Hola, me interesa el Taller Virtual: Clonación de ECU y BCM. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'solucion-problemas-arranque',
@@ -515,7 +587,8 @@
                 special_price: '$150 USD',
                 discount_percentage: '25% OFF',
                 promotion_text: '¡Resuelve problemas al instante!',
-                whatsapp_message: 'Hola, me interesa el Curso Rápido: Solución de Problemas de Arranque por Inmovilizador. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             },
             {
                 id: 'tendencias-seguridad-automotriz',
@@ -534,7 +607,8 @@
                 special_price: '',
                 discount_percentage: '',
                 promotion_text: '¡Mantente a la vanguardia!',
-                whatsapp_message: 'Hola, me interesa el Seminario Web: Últimas Tendencias en Seguridad Automotriz. ¿Podrías darme más información?'
+                useGlobalWhatsapp: true, // New property
+                individualWhatsappLink: '' // New property
             }
         ];
 
@@ -545,7 +619,7 @@
          */
         function saveProductsToLocalStorage() {
             localStorage.setItem('automotiveCourses', JSON.stringify(products));
-            showNotification('Cambios guardados con éxito.', false);
+            showNotification('Cambios de cursos guardados con éxito.', false);
         }
 
         /**
@@ -563,6 +637,51 @@
             } else {
                 products = defaultProducts;
             }
+            // Ensure all products have the new WhatsApp properties
+            products.forEach(product => {
+                if (typeof product.useGlobalWhatsapp === 'undefined') {
+                    product.useGlobalWhatsapp = true;
+                }
+                if (typeof product.individualWhatsappLink === 'undefined') {
+                    product.individualWhatsappLink = '';
+                }
+            });
+        }
+
+        /**
+         * Guarda la configuración global (ej. enlace de grupo de WhatsApp) en localStorage.
+         */
+        function saveGlobalSettings() {
+            globalSettings.whatsappGroupLink = whatsappGroupLinkInput.value.trim();
+            localStorage.setItem('automotiveGlobalSettings', JSON.stringify(globalSettings));
+            // Update the catalog WhatsApp button link immediately after saving global settings
+            updateCatalogWhatsappButton();
+            showNotification('Configuración global guardada con éxito.', false);
+        }
+
+        /**
+         * Carga la configuración global desde localStorage.
+         */
+        function loadGlobalSettings() {
+            const storedSettings = localStorage.getItem('automotiveGlobalSettings');
+            if (storedSettings) {
+                try {
+                    globalSettings = JSON.parse(storedSettings);
+                } catch (e) {
+                    console.error("Error al parsear configuración global desde localStorage, usando por defecto:", e);
+                }
+            }
+            // Populate the input field in admin panel
+            whatsappGroupLinkInput.value = globalSettings.whatsappGroupLink;
+            // Update the catalog WhatsApp button link on load
+            updateCatalogWhatsappButton();
+        }
+
+        /**
+         * Actualiza el enlace del botón de WhatsApp en el catálogo principal.
+         */
+        function updateCatalogWhatsappButton() {
+            catalogWhatsappButton.href = globalSettings.whatsappGroupLink || 'https://wa.me/';
         }
 
         /**
@@ -628,7 +747,7 @@
                                 </div>
                             </div>
                             <button class="mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-                                Ver Más Detalles
+                                Más Detalles
                             </button>
                         </div>
                     </div>
@@ -674,6 +793,10 @@
                 let modalDiscountBadgeHtml = product.discount_percentage ?
                     `<span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-md ml-3">${product.discount_percentage}</span>` : '';
 
+                // Determine which WhatsApp link to use
+                const whatsappLink = product.useGlobalWhatsapp ? 
+                                     (globalSettings.whatsappGroupLink || 'https://wa.me/') : 
+                                     (product.individualWhatsappLink || 'https://wa.me/'); // Fallback if individual is empty
 
                 modalContentArea.innerHTML = `
                     <div class="md:w-1/2 flex-shrink-0">
@@ -693,8 +816,8 @@
                                 ${detailsHtml}
                             </ul>
                         </div>
-                        <a href="https://wa.me/?text=${encodeURIComponent(product.whatsapp_message)}" target="_blank" class="mt-auto inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg">
-                            <i class="fab fa-whatsapp mr-3 text-2xl"></i> ¡Quiero Convertirme en un Experto! Inscribirme Ahora
+                        <a href="${whatsappLink}" target="_blank" class="mt-auto inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200 text-lg">
+                            <i class="fab fa-whatsapp mr-3 text-2xl"></i> ¡Únete al Grupo de WhatsApp!
                         </a>
                     </div>
                 `;
@@ -736,6 +859,7 @@
             if (btoa(enteredPassword) === ADMIN_PASSWORD_HASH) {
                 closeAdminLoginModal();
                 openAdminPanelModal();
+                loadGlobalSettings(); // Load global settings when admin panel opens
                 renderAdminCourseList(); // Asegurarse de que la lista de cursos esté actualizada
                 showNotification('Acceso de administrador concedido.', false);
             } else {
@@ -786,6 +910,19 @@
         }
 
         /**
+         * Alterna la visibilidad del campo de enlace individual de WhatsApp.
+         */
+        function toggleIndividualWhatsappLink() {
+            const selectedWhatsappType = document.querySelector('input[name="whatsapp_link_type"]:checked').value;
+            if (selectedWhatsappType === 'individual') {
+                individualWhatsappLinkField.classList.remove('hidden');
+            } else {
+                individualWhatsappLinkField.classList.add('hidden');
+                courseIndividualWhatsappLinkInput.value = ''; // Clear the input if switching back to global
+            }
+        }
+
+        /**
          * Abre el formulario para añadir o editar un curso.
          * @param {string|null} productId - ID del curso a editar, o null para añadir uno nuevo.
          */
@@ -801,11 +938,19 @@
                     courseImageInput.value = product.image;
                     courseFullDescriptionInput.value = product.full_description;
                     courseDetailsInput.value = Array.isArray(product.details) ? product.details.join(', ') : product.details || '';
-                    courseOriginalPriceInput.value = product.original_price || ''; // Populate new fields
+                    courseOriginalPriceInput.value = product.original_price || '';
                     courseSpecialPriceInput.value = product.special_price || '';
                     courseDiscountPercentageInput.value = product.discount_percentage || '';
                     coursePromotionTextInput.value = product.promotion_text || '';
-                    courseWhatsappMessageInput.value = product.whatsapp_message;
+                    
+                    // Set WhatsApp link type and value
+                    if (product.useGlobalWhatsapp) {
+                        document.querySelector('input[name="whatsapp_link_type"][value="global"]').checked = true;
+                    } else {
+                        document.querySelector('input[name="whatsapp_link_type"][value="individual"]').checked = true;
+                        courseIndividualWhatsappLinkInput.value = product.individualWhatsappLink || '';
+                    }
+                    toggleIndividualWhatsappLink(); // Ensure correct field visibility
                 }
             } else {
                 formTitle.textContent = 'Agregar Nuevo Curso';
@@ -815,11 +960,15 @@
                 courseImageInput.value = '';
                 courseFullDescriptionInput.value = '';
                 courseDetailsInput.value = '';
-                courseOriginalPriceInput.value = ''; // Clear new fields
+                courseOriginalPriceInput.value = '';
                 courseSpecialPriceInput.value = '';
                 courseDiscountPercentageInput.value = '';
                 coursePromotionTextInput.value = '';
-                courseWhatsappMessageInput.value = '';
+                
+                // Default to global WhatsApp link for new courses
+                document.querySelector('input[name="whatsapp_link_type"][value="global"]').checked = true;
+                courseIndividualWhatsappLinkInput.value = '';
+                toggleIndividualWhatsappLink(); // Hide individual link field
             }
         }
 
@@ -840,13 +989,16 @@
             const image = courseImageInput.value.trim();
             const full_description = courseFullDescriptionInput.value.trim();
             const details = courseDetailsInput.value.split(',').map(d => d.trim()).filter(d => d); // Convertir string a array
-            const original_price = courseOriginalPriceInput.value.trim(); // New
-            const special_price = courseSpecialPriceInput.value.trim();   // New
-            const discount_percentage = courseDiscountPercentageInput.value.trim(); // New
-            const promotion_text = coursePromotionTextInput.value.trim(); // New
-            const whatsapp_message = courseWhatsappMessageInput.value.trim();
+            const original_price = courseOriginalPriceInput.value.trim();
+            const special_price = courseSpecialPriceInput.value.trim();
+            const discount_percentage = courseDiscountPercentageInput.value.trim();
+            const promotion_text = coursePromotionTextInput.value.trim();
+            
+            // Get WhatsApp link type and value
+            const useGlobalWhatsapp = document.querySelector('input[name="whatsapp_link_type"]:checked').value === 'global';
+            const individualWhatsappLink = useGlobalWhatsapp ? '' : courseIndividualWhatsappLinkInput.value.trim();
 
-            if (!name || !short_review || !full_description || details.length === 0 || !whatsapp_message) {
+            if (!name || !short_review || !full_description || details.length === 0) {
                 showNotification('Por favor, completa los campos obligatorios del curso.', true);
                 return;
             }
@@ -858,11 +1010,12 @@
                 image: image || 'https://placehold.co/400x300/cccccc/333333?text=Imagen+por+defecto', // Imagen por defecto si no se proporciona
                 full_description,
                 details,
-                original_price, // Save new fields
+                original_price,
                 special_price,
                 discount_percentage,
                 promotion_text,
-                whatsapp_message
+                useGlobalWhatsapp, // Save new property
+                individualWhatsappLink // Save new property
             };
 
             const existingIndex = products.findIndex(p => p.id === id);
@@ -914,7 +1067,7 @@
             } else if (event.target == adminLoginModal) {
                 closeAdminLoginModal();
             } else if (event.target == adminPanelModal) {
-                // No cerrar el panel admin si se hace click fuera, para evitar perder el estado del formulario
+                // No cerrar el panel admin si se hace click fuera, para evitar perder el estado del formulario.
                 // Se cierra con el botón X o al recargar la página.
             }
         };
@@ -922,7 +1075,9 @@
         // Carga los productos y renderiza el catálogo cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
             loadProductsFromLocalStorage();
+            loadGlobalSettings(); // Load global settings on page load
             renderProductCards();
+            updateCatalogWhatsappButton(); // Ensure the catalog button is updated on load
         });
     </script>
 </body>
